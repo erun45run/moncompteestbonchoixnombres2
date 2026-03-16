@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le compte est bon - Mathador</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f0f4ff;
+  --bg2:       #e2eaff;
+  --white:     #ffffff;
+  --border:    #c8d5f5;
+  --yellow:    #ffd43b;
+  --yellow-dk: #f59f00;
+  --orange:    #ff7d3b;
+  --orange-dk: #e8600a;
+  --green:     #37c87a;
+  --green-dk:  #1fa85c;
+  --red:       #ff5c5c;
+  --red-dk:    #e03030;
+  --purple:    #9b59f5;
+  --purple-dk: #7c3aed;
+  --blue:      #4a90e8;
+  --blue-dk:   #2563c7;
+  --text:      #1e2d5a;
+  --text2:     #6b7db3;
+  --shadow:    rgba(74,100,200,.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255,212,59,.22) 0%, transparent 38%),
+    radial-gradient(circle at 88% 80%, rgba(155,89,245,.14) 0%, transparent 38%),
+    radial-gradient(circle at 52% 52%, rgba(55,200,122,.10) 0%, transparent 45%);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ── HEADER ── */
+header {
+  width: 100%; padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  background: var(--white);
+  border-bottom: 3px solid var(--border);
+  box-shadow: 0 3px 14px var(--shadow);
+}
+.logo {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.9rem; letter-spacing: 2px; color: var(--blue);
+  display: flex; align-items: center; gap: 6px;
+}
+.logo em { color: var(--orange); font-style: normal; }
+.header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* ── DIFFICULTY ── */
+.diff-selector { display: flex; gap: 6px; }
+.diff-btn {
+  padding: 6px 14px; border-radius: 20px; font-size: .82rem; font-weight: 700;
+  border: 2.5px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; font-family: 'Nunito', sans-serif; transition: all .2s;
+}
+.diff-btn[data-diff="facile"].active   { border-color: var(--green);  color: var(--green-dk);  background: #e8faf1; }
+.diff-btn[data-diff="moyen"].active    { border-color: var(--orange); color: var(--orange-dk); background: #fff3ee; }
+.diff-btn[data-diff="difficile"].active{ border-color: var(--red);    color: var(--red-dk);    background: #fff0f0; }
+.diff-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+
+/* ── BUTTONS ── */
+.btn {
+  border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-weight: 800; font-size: .9rem; border-radius: 12px;
+  padding: 9px 18px; transition: all .15s; letter-spacing: .2px;
+}
+.btn-primary { background: var(--blue); color: #fff; box-shadow: 0 4px 0 var(--blue-dk); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--blue-dk); }
+.btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--blue-dk); }
+.btn-primary:disabled { background: #c8d5f5; color: #8899cc; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-danger  { background: var(--red);  color: #fff; box-shadow: 0 4px 0 var(--red-dk); }
+.btn-danger:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 var(--red-dk); }
+.btn-danger:active { transform: translateY(2px);  box-shadow: 0 2px 0 var(--red-dk); }
+.btn-new     { background: var(--green); color: #fff; box-shadow: 0 4px 0 var(--green-dk); }
+.btn-new:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 var(--green-dk); }
+
+/* ── LAYOUT ── */
+.main-layout {
+  width: 100%; max-width: 1080px;
+  display: flex; flex-direction: column;
+  gap: 14px; padding: 16px 14px; flex: 1;
+}
+.row-mid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.row-bottom {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white); border: 2.5px solid var(--border);
+  border-radius: 18px; padding: 16px 18px;
+  box-shadow: 0 4px 18px var(--shadow);
+}
+.card-title {
+  font-family: 'Fredoka One', sans-serif; font-size: .95rem;
+  color: var(--text2); margin-bottom: 11px; letter-spacing: .3px;
+}
+
+/* ── TARGET + SCORE ── */
+.target-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #fff9e0 0%, #fff2a8 100%);
+  border: 3px solid var(--yellow-dk); border-radius: 18px;
+  box-shadow: 0 6px 0 rgba(245,159,0,.22), 0 10px 24px rgba(245,159,0,.13);
+}
+.target-zone { display: flex; flex-direction: column; gap: 1px; }
+.target-label { font-family: 'Fredoka One', sans-serif; font-size: .9rem; color: var(--yellow-dk); }
+.target-number {
+  font-family: 'Fredoka One', sans-serif; font-size: 5.5rem;
+  color: var(--orange-dk); line-height: 1;
+  text-shadow: 3px 3px 0 rgba(232,96,10,.18);
+}
+.score-zone { text-align: right; }
+.score-label { font-family: 'Fredoka One', sans-serif; font-size: .9rem; color: var(--blue-dk); margin-bottom: 2px; }
+.score-val { font-family: 'Fredoka One', sans-serif; font-size: 3.6rem; color: var(--blue); line-height: 1; }
+.tries-row { display: flex; gap: 7px; justify-content: flex-end; margin-top: 7px; }
+.try-dot { width: 15px; height: 15px; border-radius: 50%; background: var(--green); border: 2.5px solid var(--green-dk); transition: all .25s; }
+.try-dot.used { background: #d0ddf5; border-color: var(--border); }
+
+/* ── NUMBERS (given) ── */
+.numbers-card { border-color: var(--orange); box-shadow: 0 5px 0 rgba(255,125,59,.18), 0 8px 20px var(--shadow); }
+.numbers-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.num-chip {
+  width: 62px; height: 62px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka One', sans-serif; font-size: 1.9rem;
+  cursor: pointer; transition: all .16s;
+  border: 3px solid #ccd8f0; background: var(--bg2);
+  color: var(--text); user-select: none; position: relative;
+  box-shadow: 0 5px 0 #b4c4e4;
+}
+.num-chip:hover:not(.used) { border-color: var(--orange); color: var(--orange-dk); transform: translateY(-3px); box-shadow: 0 8px 0 rgba(255,125,59,.28); }
+.num-chip.selected-a { border-color: var(--orange); background: #fff2ea; color: var(--orange-dk); transform: translateY(-3px); box-shadow: 0 8px 0 rgba(255,125,59,.28); }
+.num-chip.selected-b { border-color: #ffb070; background: #fff8f2; color: var(--orange); transform: translateY(-2px); box-shadow: 0 5px 0 rgba(255,125,59,.18); }
+.num-chip.used { opacity: .28; cursor: not-allowed; box-shadow: none; transform: none; }
+
+/* ── RESULT CHIPS (intermediate) ── */
+.result-chip {
+  min-width: 62px; height: 62px; padding: 0 18px;
+  border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka One', sans-serif; font-size: 1.9rem;
+  cursor: pointer; transition: all .16s;
+  border: 3px solid var(--green); background: #e6f9ef;
+  color: var(--green-dk); user-select: none; position: relative;
+  box-shadow: 0 5px 0 rgba(31,168,92,.25);
+}
+.result-chip:hover:not(.used):not(.selected-a):not(.selected-b) { background: #ccf2de; transform: translateY(-3px); box-shadow: 0 8px 0 rgba(31,168,92,.28); }
+.result-chip.selected-a { background: #bbeed4; transform: translateY(-3px); box-shadow: 0 8px 0 rgba(31,168,92,.32); }
+.result-chip.selected-b { background: #d4f4e4; transform: translateY(-2px); box-shadow: 0 5px 0 rgba(31,168,92,.2); }
+.result-chip.used { opacity: .28; cursor: not-allowed; box-shadow: none; transform: none; }
+.chip-badge {
+  position: absolute; top: -9px; right: -9px;
+  width: 23px; height: 23px; border-radius: 50%;
+  font-family: 'Fredoka One', sans-serif; font-size: .8rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--orange); color: #fff;
+  border: 2.5px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+.result-chip .chip-badge { background: var(--green-dk); }
+.numbers-separator { width: 100%; border: none; border-top: 2px dashed var(--border); margin: 12px 0; }
+.result-chips-label { font-size: .84rem; font-weight: 800; color: var(--green-dk); margin-bottom: 8px; }
+
+/* ── OPERATORS ── */
+.ops-card { border-color: var(--purple); box-shadow: 0 5px 0 rgba(155,89,245,.18), 0 8px 20px var(--shadow); }
+.ops-grid { display: flex; gap: 10px; }
+.op-btn {
+  flex: 1; height: 66px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka One', sans-serif; font-size: 2rem;
+  cursor: pointer; transition: all .16s; border: 3px solid; user-select: none;
+}
+.op-btn[data-op="+"] { color: var(--green-dk);  border-color: var(--green);  background: #ecfaf3; box-shadow: 0 5px 0 rgba(31,168,92,.25); }
+.op-btn[data-op="-"] { color: var(--red-dk);    border-color: var(--red);    background: #fff0f0; box-shadow: 0 5px 0 rgba(224,48,48,.22); }
+.op-btn[data-op="×"] { color: var(--yellow-dk); border-color: var(--yellow); background: #fffcea; box-shadow: 0 5px 0 rgba(245,159,0,.22); }
+.op-btn[data-op="÷"] { color: var(--purple-dk); border-color: var(--purple); background: #f2eeff; box-shadow: 0 5px 0 rgba(124,58,237,.22); }
+.op-btn:hover:not(.selected) { transform: translateY(-3px); }
+.op-btn[data-op="+"].selected { background: #baecd0; transform: translateY(2px); box-shadow: 0 2px 0 rgba(31,168,92,.25); }
+.op-btn[data-op="-"].selected { background: #ffc8c8; transform: translateY(2px); box-shadow: 0 2px 0 rgba(224,48,48,.22); }
+.op-btn[data-op="×"].selected { background: #ffe988; transform: translateY(2px); box-shadow: 0 2px 0 rgba(245,159,0,.22); }
+.op-btn[data-op="÷"].selected { background: #d8c8ff; transform: translateY(2px); box-shadow: 0 2px 0 rgba(124,58,237,.22); }
+.op-pts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.op-pt-badge { font-size: .78rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; border: 2px solid; }
+.op-pt-badge.add { color: var(--green-dk);  border-color: var(--green);  background: #ecfaf3; }
+.op-pt-badge.sub { color: var(--red-dk);    border-color: var(--red);    background: #fff0f0; }
+.op-pt-badge.mul { color: var(--yellow-dk); border-color: var(--yellow); background: #fffcea; }
+.op-pt-badge.div { color: var(--purple-dk); border-color: var(--purple); background: #f2eeff; }
+
+/* ── CALC DISPLAY ── */
+.calc-card { border-color: var(--blue); box-shadow: 0 5px 0 rgba(74,144,232,.18), 0 8px 20px var(--shadow); }
+.calc-display {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 12px; padding: 14px 18px; min-height: 64px;
+  display: flex; align-items: center;
+}
+.calc-expr {
+  font-family: 'Fredoka One', sans-serif; font-size: 1.45rem; color: var(--text);
+  min-height: 30px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.error-msg {
+  font-size: .86rem; font-weight: 700; color: var(--red-dk);
+  min-height: 20px; margin-top: 7px;
+}
+.action-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+
+/* ── HISTORY ── */
+.history-list { display: flex; flex-direction: column; gap: 5px; max-height: 270px; overflow-y: auto; padding-right: 2px; }
+.history-try { margin-bottom: 10px; }
+.history-try-label {
+  font-size: .78rem; font-weight: 800; color: var(--text2); letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 6px; padding: 3px 9px; background: var(--bg2); border-radius: 6px; display: inline-block;
+}
+.history-line {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg2); border-radius: 10px; padding: 8px 12px;
+  font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 700;
+  color: var(--text); border-left: 4px solid var(--border); margin-bottom: 3px;
+}
+.history-line .pts { font-size: .8rem; font-weight: 800; color: var(--blue); white-space: nowrap; margin-left: 8px; }
+.history-line.add { border-left-color: var(--green); }
+.history-line.sub { border-left-color: var(--red); }
+.history-line.mul { border-left-color: var(--yellow-dk); }
+.history-line.div { border-left-color: var(--purple); }
+.history-empty { font-size: .88rem; color: var(--text2); font-style: italic; text-align: center; padding: 12px 0; }
+
+/* ── RULES ── */
+.rules-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.rules-list li {
+  font-size: .84rem; font-weight: 600; color: var(--text2);
+  padding: 7px 10px 7px 30px; position: relative; line-height: 1.5;
+  background: var(--bg2); border-radius: 10px;
+}
+.rules-list li::before { content: '★'; position: absolute; left: 9px; top: 8px; color: var(--yellow-dk); font-size: .78rem; }
+.rules-list li strong { color: var(--text); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(30,45,90,.48);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; backdrop-filter: blur(5px);
+  opacity: 0; pointer-events: none; transition: opacity .22s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white); border: 3px solid var(--border);
+  border-radius: 24px; padding: 30px 26px; max-width: 460px; width: 92%;
+  transform: scale(.9) translateY(20px); transition: transform .22s;
+  box-shadow: 0 20px 55px rgba(30,45,90,.24);
+}
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal h2 { font-family: 'Fredoka One', sans-serif; font-size: 1.9rem; letter-spacing: .5px; margin-bottom: 10px; }
+.modal h2.warn    { color: var(--red); }
+.modal h2.success { color: var(--green-dk); }
+.modal h2.info    { color: var(--blue); }
+.modal p { font-size: .92rem; font-weight: 600; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 4px; }
+.optimal-solution { background: var(--bg2); border-radius: 12px; padding: 14px 16px; margin: 10px 0; border: 2px solid var(--border); }
+.optimal-solution .sol-line { font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 700; color: var(--text2); margin-bottom: 5px; }
+.optimal-solution .sol-line span { color: var(--green-dk); font-weight: 800; }
+.optimal-solution .sol-pts { color: var(--blue); font-weight: 800; font-size: .9rem; margin-top: 9px; }
+.player-recap { background: #fffbea; border-radius: 12px; padding: 14px 16px; margin: 10px 0; border: 2px solid var(--yellow); }
+.player-recap-title { font-family: 'Fredoka One', sans-serif; font-size: .88rem; color: var(--yellow-dk); margin-bottom: 8px; }
+.player-recap .recap-line {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 700;
+  color: var(--text); padding: 5px 8px; border-radius: 8px;
+  background: var(--white); margin-bottom: 4px;
+  border-left: 4px solid var(--border);
+}
+.player-recap .recap-line.add { border-left-color: var(--green); }
+.player-recap .recap-line.sub { border-left-color: var(--red); }
+.player-recap .recap-line.mul { border-left-color: var(--yellow-dk); }
+.player-recap .recap-line.div { border-left-color: var(--purple); }
+.player-recap .recap-line .rpts { font-size: .8rem; font-weight: 800; color: var(--blue); white-space: nowrap; margin-left: 8px; }
+.player-recap .recap-total { font-family: 'Fredoka One', sans-serif; font-size: .92rem; color: var(--orange-dk); margin-top: 8px; text-align: right; }
+.modal-section-label { font-size: .78rem; font-weight: 800; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin: 14px 0 6px; }
+
+/* ── INPUT SCREEN ── */
+.input-overlay {
+  position: fixed; inset: 0; background: rgba(30,45,90,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none; transition: opacity .22s;
+}
+.input-overlay.open { opacity: 1; pointer-events: all; }
+.input-modal {
+  background: var(--white); border: 3px solid var(--border);
+  border-radius: 24px; padding: 28px 28px 24px;
+  max-width: 480px; width: 94%;
+  transform: scale(.92) translateY(18px); transition: transform .22s;
+  box-shadow: 0 20px 55px rgba(30,45,90,.26);
+}
+.input-overlay.open .input-modal { transform: scale(1) translateY(0); }
+.input-modal h2 {
+  font-family: 'Fredoka One', sans-serif; font-size: 1.65rem;
+  color: var(--blue); margin-bottom: 6px; letter-spacing: .4px;
+}
+.input-modal .subtitle {
+  font-size: .86rem; font-weight: 600; color: var(--text2); margin-bottom: 20px; line-height: 1.5;
+}
+.input-section-label {
+  font-family: 'Fredoka One', sans-serif; font-size: .88rem;
+  color: var(--orange-dk); margin-bottom: 8px; letter-spacing: .2px;
+}
+.input-numbers-row {
+  display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;
+}
+.input-num {
+  width: 62px; height: 54px; border-radius: 12px;
+  border: 3px solid var(--border); background: var(--bg2);
+  font-family: 'Fredoka One', sans-serif; font-size: 1.4rem;
+  color: var(--text); text-align: center; outline: none;
+  transition: border-color .15s; -moz-appearance: textfield;
+}
+.input-num::-webkit-outer-spin-button,
+.input-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.input-num:focus { border-color: var(--orange); background: #fff2ea; }
+.input-num.invalid { border-color: var(--red); background: #fff0f0; }
+.input-target-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.input-target {
+  width: 110px; height: 56px; border-radius: 14px;
+  border: 3px solid var(--yellow-dk); background: #fffcea;
+  font-family: 'Fredoka One', sans-serif; font-size: 1.9rem;
+  color: var(--orange-dk); text-align: center; outline: none;
+  transition: border-color .15s; -moz-appearance: textfield;
+}
+.input-target::-webkit-outer-spin-button,
+.input-target::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.input-target:focus { border-color: var(--orange); }
+.input-target.invalid { border-color: var(--red); background: #fff0f0; }
+.input-target-hint {
+  font-size: .82rem; font-weight: 700; color: var(--text2); line-height: 1.5;
+}
+.input-error {
+  font-size: .84rem; font-weight: 700; color: var(--red-dk);
+  min-height: 20px; margin-bottom: 10px;
+}
+.input-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ── ANIMATIONS ── */
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+.shake { animation: shake .32s ease; }
+@keyframes pop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.14)} }
+.pop { animation: pop .26s ease; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .main-layout { grid-template-columns: 1fr; }
+  .target-number { font-size: 3.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">🌟 Le compte est bon — <em>MATHADOR</em></div>
+  <div class="header-right">
+    <div class="diff-selector">
+      <button class="diff-btn active" data-diff="facile">😊 Facile</button>
+      <button class="diff-btn" data-diff="moyen">😎 Moyen</button>
+      <button class="diff-btn" data-diff="difficile">🔥 Difficile</button>
+    </div>
+    <button class="btn btn-new" id="newGameBtn">🎲 Nouvelle partie</button>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- ══ ROW 1 : Cible + Score ══ -->
+  <div class="target-card">
+    <div class="target-zone">
+      <div class="target-label">🎯 Mon nombre cible</div>
+      <div class="target-number" id="targetDisplay">--</div>
+    </div>
+    <div class="score-zone">
+      <div class="score-label">🏆 Mon score</div>
+      <div class="score-val" id="scoreDisplay">0</div>
+      <div class="tries-row" id="triesRow"></div>
+    </div>
+  </div>
+
+  <!-- ══ ROW 2 : Nombres + Opérations ══ -->
+  <div class="row-mid">
+
+    <!-- Nombres -->
+    <div class="card numbers-card">
+      <div class="card-title">🔢 Mes nombres — je clique pour choisir</div>
+      <div class="numbers-grid" id="numbersGrid"></div>
+      <!-- Résultats intermédiaires -->
+      <div id="resultsArea" style="display:none">
+        <hr class="numbers-separator">
+        <div class="result-chips-label">✅ Mes résultats intermédiaires — je peux les utiliser librement</div>
+        <div class="numbers-grid" id="resultsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Opérations -->
+    <div class="card ops-card">
+      <div class="card-title">⚙️ Mes opérations — je choisis celle que je veux utiliser</div>
+      <div class="ops-grid">
+        <div class="op-btn" data-op="+">+</div>
+        <div class="op-btn" data-op="-">−</div>
+        <div class="op-btn" data-op="×">×</div>
+        <div class="op-btn" data-op="÷">÷</div>
+      </div>
+      <div class="op-pts">
+        <span class="op-pt-badge add">+ = 1 pt</span>
+        <span class="op-pt-badge mul">× = 1 pt</span>
+        <span class="op-pt-badge sub">− = 2 pts</span>
+        <span class="op-pt-badge div">÷ = 3 pts</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ ROW 3 : Calcul en cours + Historique ══ -->
+  <div class="row-bottom">
+
+    <!-- Calcul en cours -->
+    <div class="card calc-card">
+      <div class="card-title">🧮 Mon calcul en cours</div>
+      <div class="calc-display" id="calcDisplay">
+        <div class="calc-expr" id="calcExpr">
+          <span style="color:var(--text2);font-size:.95rem;font-family:'Nunito'">Je sélectionne mes deux nombres et mon opération…</span>
+        </div>
+      </div>
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="action-row">
+        <button class="btn btn-primary" id="validateBtn" disabled>✓ Valider mon calcul</button>
+        <button class="btn btn-danger"  id="cancelTryBtn">✕ Annuler mon essai</button>
+      </div>
+    </div>
+
+    <!-- Historique -->
+    <div class="card">
+      <div class="card-title">📋 Mes calculs de cet essai</div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">Je n'ai pas encore fait de calcul…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ ROW 4 : Règles ══ -->
+  <div class="card">
+    <div class="card-title">📖 Les règles du jeu</div>
+    <ul class="rules-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:7px">
+      <li>J'essaie d'atteindre le <strong>nombre cible</strong> avec mes 5 nombres.</li>
+      <li>J'utilise <strong>+  −  ×  ÷</strong> pour combiner mes nombres.</li>
+      <li>Je n'ai <strong>pas besoin d'utiliser</strong> les 5 nombres.</li>
+      <li>Je ne peux utiliser chaque nombre qu'<strong>une seule fois</strong>.</li>
+      <li>Chaque résultat intermédiaire peut être utilisé <strong>librement</strong>, dans n'importe quel calcul suivant.</li>
+      <li>Je sélectionne mon <strong>1er nombre</strong>, puis mon <strong>opération</strong>, puis mon <strong>2ème nombre</strong>.</li>
+      <li>J'ai droit à <strong>3 essais</strong> au maximum par partie.</li>
+      <li>Pas de résultat <strong>négatif</strong> ni de division <strong>non entière</strong>.</li>
+      <li>Je gagne <strong>5 pts</strong> si j'atteins la cible + les pts des opérations.</li>
+      <li>Je gagne <strong>18 pts</strong> si j'utilise mes 5 nombres et les 4 opérations !</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- MODAL résultat -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle"></h2>
+    <p  id="modalBody"></p>
+    <div id="playerRecap" style="display:none"></div>
+    <div id="optimalSol"  style="display:none"></div>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+
+<!-- INPUT MODAL -->
+<div class="input-overlay" id="inputOverlay">
+  <div class="input-modal">
+    <h2>🎯 Saisir une nouvelle partie</h2>
+    <p class="subtitle">Entre les 5 nombres et le nombre cible pour démarrer la partie.</p>
+
+    <div class="input-section-label">🔢 Mes 5 nombres (entre 1 et 99)</div>
+    <div class="input-numbers-row">
+      <input type="number" class="input-num" id="in0" min="1" max="99" placeholder="N1">
+      <input type="number" class="input-num" id="in1" min="1" max="99" placeholder="N2">
+      <input type="number" class="input-num" id="in2" min="1" max="99" placeholder="N3">
+      <input type="number" class="input-num" id="in3" min="1" max="99" placeholder="N4">
+      <input type="number" class="input-num" id="in4" min="1" max="99" placeholder="N5">
+    </div>
+
+    <div class="input-section-label">🎯 Mon nombre cible (entre 1 et 999)</div>
+    <div class="input-target-row">
+      <input type="number" class="input-target" id="inTarget" min="1" max="999" placeholder="Cible">
+      <div class="input-target-hint">Nombre entier<br>entre 1 et 999</div>
+    </div>
+
+    <div class="input-error" id="inputError"></div>
+    <div class="input-actions">
+      <button class="btn btn-new" id="startGameBtn">▶ Jouer !</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
+const state = {
+  target:0, givenNumbers:[], difficulty:'facile',
+  score:0, tryIndex:0,
+  // Résultats intermédiaires : [{id, v, used}]
+  intermediateResults:[],
+  nextResultId:0,
+  selectedOp:null,
+  slotA:null, slotB:null,   // {type:'given'|'result', idx (given) ou id (result)}
+  currentHistory:[], allHistory:[], gameOver:false,
+  optimalSolution:null, bestSolution:null,
+};
+
+const diffConfig = {
+  facile:    {targetMax:50,  numMax:10},
+  moyen:     {targetMax:75,  numMax:15},
+  difficile: {targetMax:99,  numMax:20},
+};
+
+/* ══════════════════════════════
+   MATH HELPERS
+══════════════════════════════ */
+function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+function applyOp(a,op,b){
+  if(op==='+') return a+b;
+  if(op==='-') return a-b<0?null:a-b;
+  if(op==='×') return a*b;
+  if(op==='÷') return (!b||a%b!==0)?null:a/b;
+  return null;
+}
+function opPts(op){ return op==='+'?1:op==='-'?2:op==='×'?1:op==='÷'?3:0; }
+function opCls(op){ return op==='+'?'add':op==='-'?'sub':op==='×'?'mul':'div'; }
+
+/* ══════════════════════════════
+   PUZZLE GENERATION / SOLVING
+   Modèle "pool libre" : à chaque étape on choisit 2 tokens quelconques
+   dans le pool, on les combine, et on remet le résultat dans le pool.
+   C'est exactement ce que fait le joueur avec la nouvelle règle.
+══════════════════════════════ */
+const OPS=['+','-','×','÷'];
+
+/*
+ * solveFreePool(pool, target, steps, onSolution)
+ * pool    : tableau de valeurs disponibles
+ * steps   : tableau des étapes déjà effectuées [{a,op,b,res}]
+ * onSolution(steps, usedOriginalCount, opsUsed) : callback à chaque solution trouvée
+ *
+ * On itère sur toutes les paires (i,j) avec i<j, toutes les opérations,
+ * et on appelle récursivement avec le nouveau pool.
+ */
+function solveFreePool(pool, target, steps, onSolution){
+  // Vérifie si la cible est atteinte dans le pool
+  if(pool.includes(target)){
+    onSolution(steps);
+  }
+  // Continue à combiner si plus de 1 token
+  if(pool.length<2) return;
+  for(let i=0;i<pool.length;i++){
+    for(let j=0;j<pool.length;j++){
+      if(i===j) continue;
+      for(const op of OPS){
+        const r=applyOp(pool[i],op,pool[j]);
+        if(r===null) continue;
+        // Nouveau pool : retire i et j, ajoute r
+        const newPool=pool.filter((_,k)=>k!==i&&k!==j).concat(r);
+        const newSteps=[...steps,{a:pool[i],op,b:pool[j],res:r}];
+        solveFreePool(newPool, target, newSteps, onSolution);
+      }
+    }
+  }
+}
+
+/*
+ * Calcule le score d'une solution.
+ * originalNums : les 5 nombres de départ
+ * steps        : étapes [{a,op,b,res}]
+ * Règle : si tous les 5 nombres originaux sont utilisés ET les 4 ops différentes → 18 pts
+ *         sinon 5 + somme des pts d'opération
+ */
+function scoreOfSolution(originalNums, steps){
+  /*
+   * Chaque token est un objet {id, v} pour éviter les collisions de valeurs.
+   * Les originaux ont des ids 0..N-1, les intermédiaires reçoivent des ids
+   * négatifs au fur et à mesure.
+   * On simule le pool en cherchant par valeur (first match) dans les tokens
+   * disponibles, ce qui est suffisant car on maîtrise l'ordre de construction.
+   *
+   * steps peut venir du solveur ({a,op,b,res}) ou de currentHistory ({a,op,b,result}).
+   * On normalise : res = s.res ?? s.result
+   */
+  let pool = originalNums.map((v,i)=>({id:i, v, isOrig:true}));
+  let tmpId = -1;
+
+  for(const s of steps){
+    const res = (s.res !== undefined) ? s.res : s.result;
+    // Retire le premier token dont la valeur correspond à s.a
+    const ia = pool.findIndex(t=>t.v===s.a);
+    const aIsOrig = ia>=0 && pool[ia].isOrig;
+    if(ia>=0) pool.splice(ia,1);
+    // Retire le premier token restant dont la valeur correspond à s.b
+    const ib = pool.findIndex(t=>t.v===s.b);
+    if(ib>=0) pool.splice(ib,1);
+    // Ajoute le résultat comme token intermédiaire
+    pool.push({id:tmpId--, v:res, isOrig:false});
+  }
+
+  // Nombres originaux consommés = ceux qui ne sont plus dans le pool final
+  const origUsed = originalNums.length - pool.filter(t=>t.isOrig).length;
+
+  const opsUsed = new Set(steps.map(s=>s.op));
+  // Bonus 18 pts : tous les 5 nombres originaux utilisés ET les 4 opérations différentes
+  if(origUsed===5 && opsUsed.size===4) return 18;
+  // Sinon : 5 pts de base + pts de chaque opération utilisée
+  return 5 + steps.reduce((sum,s)=>sum+opPts(s.op), 0);
+}
+
+/*
+ * findAnySolution : renvoie true si au moins une solution existe.
+ */
+function findAnySolution(nums, target){
+  let found=false;
+  try{
+    solveFreePool(nums, target, [], ()=>{ found=true; throw 'found'; });
+  } catch(e){ if(e!=='found') throw e; }
+  return found;
+}
+
+/*
+ * findBestSolution : renvoie la solution avec le meilleur score.
+ * Optimisation : on arrête d'explorer les branches dès que le score max (18)
+ * est atteint.
+ */
+function findBestSolution(nums, target){
+  let best=null, bestScore=-1;
+  solveFreePool(nums, target, [], (steps)=>{
+    const sc=scoreOfSolution(nums, steps);
+    if(sc>bestScore){ bestScore=sc; best={steps, score:sc}; }
+  });
+  return best;
+}
+
+/*
+ * findOptimalSolution : renvoie une solution à 18 pts si elle existe,
+ * null sinon.
+ */
+function findOptimalSolution(nums, target){
+  let optimal=null;
+  try{
+    solveFreePool(nums, target, [], (steps)=>{
+      const sc=scoreOfSolution(nums, steps);
+      if(sc===18){ optimal={steps,score:18}; throw 'optimal'; }
+    });
+  } catch(e){ if(e!=='optimal') throw e; }
+  return optimal;
+}
+
+/* ══════════════════════════════
+   INPUT SCREEN
+══════════════════════════════ */
+function openInputScreen(){
+  for(let i=0;i<5;i++) document.getElementById('in'+i).value='';
+  document.getElementById('inTarget').value='';
+  document.getElementById('inputError').textContent='';
+  document.querySelectorAll('.input-num,.input-target').forEach(el=>el.classList.remove('invalid'));
+  document.getElementById('inputOverlay').classList.add('open');
+  document.getElementById('in0').focus();
+}
+function closeInputScreen(){ document.getElementById('inputOverlay').classList.remove('open'); }
+
+function startGameFromInput(){
+  let valid=true;
+  const nums=[];
+  document.getElementById('inputError').textContent='';
+  document.querySelectorAll('.input-num,.input-target').forEach(el=>el.classList.remove('invalid'));
+
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('in'+i);
+    const v=parseInt(el.value,10);
+    if(!el.value||isNaN(v)||v<1||v>99){ el.classList.add('invalid'); valid=false; }
+    else nums.push(v);
+  }
+  const tEl=document.getElementById('inTarget');
+  const target=parseInt(tEl.value,10);
+  if(!tEl.value||isNaN(target)||target<1||target>999){ tEl.classList.add('invalid'); valid=false; }
+
+  if(!valid){ document.getElementById('inputError').textContent='⚠ Vérifie les valeurs en rouge !'; return; }
+
+  if(!findAnySolution(nums,target)){
+    document.getElementById('inputError').textContent='⚠ Ce jeu n\'a pas de solution — essaie d\'autres nombres !';
+    return;
+  }
+
+  const opt=findOptimalSolution(nums,target);
+  const best=opt||findBestSolution(nums,target);
+
+  closeInputScreen();
+  Object.assign(state,{
+    target, givenNumbers:nums.map((v,i)=>({v,id:i,used:false})),
+    optimalSolution:opt||null, bestSolution:best,
+    score:0, tryIndex:0,
+    intermediateResults:[], nextResultId:0,
+    selectedOp:null, slotA:null, slotB:null,
+    currentHistory:[], allHistory:[], gameOver:false,
+  });
+  render();
+}
+
+function newGame(){ openInputScreen(); }
+
+/* ══════════════════════════════
+   GAME LOGIC
+══════════════════════════════ */
+function resetTry(){
+  state.givenNumbers.forEach(n=>n.used=false);
+  Object.assign(state,{
+    intermediateResults:[], nextResultId:0,
+    selectedOp:null, slotA:null, slotB:null, currentHistory:[]
+  });
+  render();
+}
+
+function startNewTry(){ state.tryIndex++; resetTry(); closeModal(); }
+
+function cancelTry(){
+  if(state.gameOver) return;
+  state.allHistory.push([...state.currentHistory]);
+  state.tryIndex++;
+  if(state.tryIndex>=3){
+    state.gameOver=true; render();
+    showModal('warn','😢 C\'est raté !','J\'ai épuisé mes 3 essais sans trouver la cible. Voilà comment j\'aurais pu y arriver :',true,false);
+    return;
+  }
+  resetTry();
+}
+
+function validateCalc(){
+  clearError();
+  const op=state.selectedOp;
+  if(!state.slotA||!state.slotB){showError('⚠ Je dois choisir deux nombres (A et B) !');return;}
+  if(!op){showError('⚠ Je dois choisir une opération !');return;}
+
+  // Récupère la valeur d'un slot (given ou result intermédiaire)
+  const val=s=>{
+    if(s.type==='given') return state.givenNumbers[s.idx].v;
+    if(s.type==='result'){
+      const r=state.intermediateResults.find(r=>r.id===s.id);
+      return r?r.v:null;
+    }
+    return null;
+  };
+
+  const a=val(state.slotA), b=val(state.slotB);
+  if(a===null||b===null){showError('⚠ Sélection invalide !');return;}
+
+  // Empêche d'utiliser deux fois le même résultat intermédiaire
+  if(state.slotA.type==='result' && state.slotB.type==='result' && state.slotA.id===state.slotB.id){
+    showError('⚠ Je ne peux pas utiliser le même résultat deux fois !'); return;
+  }
+  // Empêche d'utiliser deux fois le même nombre de départ
+  if(state.slotA.type==='given' && state.slotB.type==='given' && state.slotA.idx===state.slotB.idx){
+    showError('⚠ Je dois choisir deux nombres différents !'); return;
+  }
+
+  const result=applyOp(a,op,b);
+  if(result===null){
+    if(op==='-') showError('⚠ Ma soustraction ne peut pas donner un nombre négatif !');
+    else if(op==='÷') showError('⚠ Ma division doit donner un nombre entier !');
+    else showError('⚠ Cette opération est invalide !');
+    document.getElementById('calcDisplay').classList.add('shake');
+    setTimeout(()=>document.getElementById('calcDisplay').classList.remove('shake'),350);
+    return;
+  }
+
+  // Marquer les tokens utilisés
+  [state.slotA,state.slotB].forEach(s=>{
+    if(s.type==='given') state.givenNumbers[s.idx].used=true;
+    if(s.type==='result'){
+      const r=state.intermediateResults.find(r=>r.id===s.id);
+      if(r) r.used=true;
+    }
+  });
+
+  // Enregistrer l'historique
+  state.currentHistory.push({expr:`${a} ${op} ${b} = ${result}`,result,op,pts:opPts(op),a,b});
+
+  // Ajouter le résultat comme nouveau token libre
+  state.intermediateResults.push({id:state.nextResultId++, v:result, used:false});
+
+  state.slotA=null; state.slotB=null; state.selectedOp=null;
+
+  // Animation pop sur le dernier résultat (rendu d'abord)
+  render();
+  setTimeout(()=>{
+    const chips=document.querySelectorAll('#resultsGrid .result-chip');
+    const last=chips[chips.length-1];
+    if(last){last.classList.add('pop');setTimeout(()=>last.classList.remove('pop'),280);}
+  },40);
+
+  // Vérification cible
+  if(result===state.target){
+    const earned=scoreOfSolution(state.givenNumbers.map(n=>n.v), state.currentHistory);
+    state.score+=earned;
+    state.allHistory.push([...state.currentHistory]);
+    state.gameOver=true; render();
+    showModal('success',`🎉 Bravo, j'ai trouvé !`,`J'ai atteint ${result} et gagné ${earned} point${earned>1?'s':''}. Mon score total est de ${state.score} pts.`,true);
+    return;
+  }
+
+  // Vérification épuisement : plus aucun token disponible
+  const allGivenUsed=state.givenNumbers.every(n=>n.used);
+  const freeResults=state.intermediateResults.filter(r=>!r.used);
+  // S'il reste au moins 2 tokens libres (givens ou results), on peut encore jouer
+  const freeGivens=state.givenNumbers.filter(n=>!n.used);
+  const totalFree=freeGivens.length + freeResults.length;
+  if(totalFree<2){
+    state.allHistory.push([...state.currentHistory]);
+    const left=3-(state.tryIndex+1);
+    render();
+    if(left===0){
+      state.gameOver=true;
+      showModal('warn','😢 Nombres épuisés !','J\'ai utilisé tous mes tokens sans trouver la cible. Il ne me reste plus d\'essais. Voilà comment j\'aurais pu y arriver :',true,false);
+    } else {
+      showModal('warn','😮 J\'ai tout utilisé !',`J'ai utilisé tous mes tokens sans atteindre la cible.<br>Il me reste <strong>${left} essai(s)</strong>. Est-ce que je veux réessayer ?`,false,true);
+    }
+  }
+}
+
+/* ══════════════════════════════
+   SELECTION
+══════════════════════════════ */
+// Retourne dans quel slot se trouve un token donné
+function slotOfGiven(idx){
+  if(state.slotA?.type==='given'&&state.slotA.idx===idx)return'A';
+  if(state.slotB?.type==='given'&&state.slotB.idx===idx)return'B';
+  return null;
+}
+function slotOfResult(id){
+  if(state.slotA?.type==='result'&&state.slotA.id===id)return'A';
+  if(state.slotB?.type==='result'&&state.slotB.id===id)return'B';
+  return null;
+}
+function placeToken(token){
+  // Calcul de la clé d'égalité
+  const same=t=>{
+    if(!t) return false;
+    if(token.type==='given') return t.type==='given'&&t.idx===token.idx;
+    if(token.type==='result') return t.type==='result'&&t.id===token.id;
+    return false;
+  };
+  if(same(state.slotA)){state.slotA=null;render();return;}
+  if(same(state.slotB)){state.slotB=null;render();return;}
+  if(!state.slotA) state.slotA=token;
+  else if(!state.slotB) state.slotB=token;
+  else state.slotB=token;
+  render();
+}
+function selectNumber(idx){
+  if(state.gameOver||state.givenNumbers[idx].used)return;
+  placeToken({type:'given',idx});
+}
+function selectResultToken(id){
+  if(state.gameOver) return;
+  const r=state.intermediateResults.find(r=>r.id===id);
+  if(!r||r.used) return;
+  placeToken({type:'result',id});
+}
+function selectOp(op){if(state.gameOver)return;state.selectedOp=(state.selectedOp===op)?null:op;render();}
+
+/* ══════════════════════════════
+   RENDER
+══════════════════════════════ */
+function render(){
+  document.getElementById('targetDisplay').textContent=state.target;
+  document.getElementById('scoreDisplay').textContent=state.score;
+
+  // Tries dots
+  const tr=document.getElementById('triesRow');tr.innerHTML='';
+  for(let i=0;i<3;i++){const d=document.createElement('div');d.className='try-dot'+(i<state.tryIndex?' used':'');tr.appendChild(d);}
+
+  // Given numbers
+  const grid=document.getElementById('numbersGrid');grid.innerHTML='';
+  state.givenNumbers.forEach((n,i)=>{
+    const inA=state.slotA?.type==='given'&&state.slotA.idx===i;
+    const inB=state.slotB?.type==='given'&&state.slotB.idx===i;
+    const chip=document.createElement('div');
+    chip.className='num-chip'+(n.used?' used':'')+(inA?' selected-a':'')+(inB?' selected-b':'');
+    chip.textContent=n.v;
+    if(inA||inB){const badge=document.createElement('span');badge.className='chip-badge';badge.textContent=inA?'A':'B';chip.appendChild(badge);}
+    chip.onclick=()=>selectNumber(i);
+    grid.appendChild(chip);
+  });
+
+  // Intermediate result chips
+  const area=document.getElementById('resultsArea');
+  const rGrid=document.getElementById('resultsGrid');
+  rGrid.innerHTML='';
+  if(state.intermediateResults.length>0){
+    area.style.display='block';
+    state.intermediateResults.forEach(r=>{
+      const inA=state.slotA?.type==='result'&&state.slotA.id===r.id;
+      const inB=state.slotB?.type==='result'&&state.slotB.id===r.id;
+      const chip=document.createElement('div');
+      chip.className='result-chip'+(r.used?' used':'')+(inA?' selected-a':'')+(inB?' selected-b':'');
+      chip.textContent=r.v;
+      if(inA||inB){const badge=document.createElement('span');badge.className='chip-badge';badge.textContent=inA?'A':'B';chip.appendChild(badge);}
+      chip.onclick=()=>selectResultToken(r.id);
+      rGrid.appendChild(chip);
+    });
+  } else {
+    area.style.display='none';
+  }
+
+  // Ops
+  document.querySelectorAll('.op-btn').forEach(b=>b.classList.toggle('selected',b.dataset.op===state.selectedOp));
+
+  // Calc preview
+  const exprEl=document.getElementById('calcExpr');
+  const gv=s=>{
+    if(!s) return null;
+    if(s.type==='given') return state.givenNumbers[s.idx].v;
+    if(s.type==='result'){const r=state.intermediateResults.find(r=>r.id===s.id);return r?r.v:null;}
+    return null;
+  };
+  const aV=gv(state.slotA),bV=gv(state.slotB),op=state.selectedOp;
+  if(!state.slotA&&!state.slotB){
+    exprEl.innerHTML='<span style="color:var(--text2);font-size:.92rem;font-family:Nunito">Je sélectionne mes deux nombres et mon opération…</span>';
+  } else {
+    const aC=state.slotA?.type==='result'?'var(--green-dk)':'var(--orange-dk)';
+    const bC=state.slotB?.type==='result'?'var(--green-dk)':'var(--orange-dk)';
+    let h='';
+    h+=aV!=null?`<span style="color:${aC}">${aV}</span>`:'<span style="color:var(--text2)">A</span>';
+    h+=op?` <span style="color:var(--blue)">${op}</span>`:'<span style="color:var(--border);margin:0 4px">?</span>';
+    h+=bV!=null?` <span style="color:${bC}">${bV}</span>`:'<span style="color:var(--text2)"> B</span>';
+    if(aV!=null&&bV!=null&&op){
+      const r=applyOp(aV,op,bV);
+      h+=r!=null?` <span style="color:var(--text2)">=</span> <strong style="color:var(--green-dk)">${r}</strong>`
+                :` <span style="color:var(--text2)">=</span> <span style="color:var(--red-dk)">⚠ impossible</span>`;
+    }
+    exprEl.innerHTML=h;
+  }
+
+  document.getElementById('validateBtn').disabled=!(state.slotA&&state.slotB&&state.selectedOp);
+  renderHistory();
+}
+
+function renderHistory(){
+  const list=document.getElementById('historyList');list.innerHTML='';
+  const all=[...state.allHistory];
+  if(state.currentHistory.length>0) all.push(state.currentHistory);
+  if(all.length===0||all.every(t=>t.length===0)){list.innerHTML='<div class="history-empty">Je n\'ai pas encore fait de calcul…</div>';return;}
+  all.forEach((tryH,ti)=>{
+    if(!tryH.length)return;
+    const div=document.createElement('div');div.className='history-try';
+    const lbl=document.createElement('div');lbl.className='history-try-label';lbl.textContent=`Essai ${ti+1}`;div.appendChild(lbl);
+    let pts=0;
+    tryH.forEach(h=>{
+      pts+=h.pts;
+      const line=document.createElement('div');line.className=`history-line ${opCls(h.op)}`;
+      line.innerHTML=`<span>${h.expr}</span><span class="pts">+${h.pts} pt${h.pts>1?'s':''}</span>`;
+      div.appendChild(line);
+    });
+    const isCur=ti===all.length-1&&ti===state.tryIndex;
+    if(isCur&&state.intermediateResults.length>0){
+      const pot=document.createElement('div');
+      pot.style.cssText='font-size:.8rem;font-weight:800;color:var(--blue);margin-top:6px;padding:4px 10px;background:var(--bg2);border-radius:8px;display:inline-block';
+      pot.innerHTML=`🏆 Si je trouve la cible : <strong>${5+pts} pts</strong>`;
+      div.appendChild(pot);
+    }
+    list.appendChild(div);
+  });
+}
+
+/* ══════════════════════════════
+   ERROR / MODAL
+══════════════════════════════ */
+function showError(msg){const el=document.getElementById('errorMsg');el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},3200);}
+function clearError(){document.getElementById('errorMsg').textContent='';}
+
+function showModal(type,title,body,showOptimal=false,showRetry=false){
+  document.getElementById('modalTitle').className=type;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body.replace(/\n/g,'<br>');
+  const btns=document.getElementById('modalBtns');btns.innerHTML='';
+  const opt=document.getElementById('optimalSol');
+  const recap=document.getElementById('playerRecap');
+
+  const allTries=[...state.allHistory];
+  if(state.currentHistory.length>0) allTries.push(state.currentHistory);
+  const hasCalcs=allTries.some(t=>t.length>0);
+
+  if(showOptimal && hasCalcs){
+    recap.style.display='block'; recap.innerHTML='';
+    const titleDiv=document.createElement('div');titleDiv.className='modal-section-label';titleDiv.textContent='📝 Mon dernier essai';recap.appendChild(titleDiv);
+    const lastTry=allTries.filter(t=>t.length>0).pop();
+    if(lastTry){
+      const box=document.createElement('div');box.className='player-recap';
+      let totalPts=0;
+      lastTry.forEach(h=>{
+        totalPts+=h.pts;
+        const line=document.createElement('div');line.className=`recap-line ${opCls(h.op)}`;
+        line.innerHTML=`<span>${h.expr}</span><span class="rpts">+${h.pts} pt${h.pts>1?'s':''}</span>`;
+        box.appendChild(line);
+      });
+      const lastResult=lastTry[lastTry.length-1]?.result;
+      const reachedTarget=lastResult===state.target;
+      const tot=document.createElement('div');tot.className='recap-total';
+      if(reachedTarget){
+        const earned=scoreOfSolution(state.givenNumbers.map(n=>n.v), lastTry);
+        tot.innerHTML=`🏆 Score gagné : <strong>${earned} pts</strong>`;
+      } else {
+        tot.innerHTML=`<span style="color:var(--text2)">Cible non atteinte</span>`;
+      }
+      box.appendChild(tot);
+      recap.appendChild(box);
+    }
+  } else { recap.style.display='none'; recap.innerHTML=''; }
+
+  if(showOptimal){
+    const sol=state.optimalSolution||state.bestSolution;
+    if(sol){
+      opt.style.display='block';
+      const solLabel=document.createElement('div');solLabel.className='modal-section-label';
+      solLabel.textContent=state.optimalSolution?'✨ La solution à 18 pts :':'🔝 La meilleure solution possible :';
+      opt.innerHTML=''; opt.appendChild(solLabel);
+      const d=document.createElement('div');d.className='optimal-solution';
+      sol.steps.forEach(s=>{const l=document.createElement('div');l.className='sol-line';l.innerHTML=`${s.a} ${s.op} ${s.b} = <span>${s.res}</span>`;d.appendChild(l);});
+      const p=document.createElement('div');p.className='sol-pts';p.textContent=`→ Score : ${sol.score} points`;d.appendChild(p);
+      opt.appendChild(d);
+    } else opt.style.display='none';
+  } else { opt.style.display='none'; opt.innerHTML=''; }
+
+  if(showRetry){
+    const r=document.createElement('button');r.className='btn btn-primary';r.textContent='🔄 Je réessaie !';r.onclick=startNewTry;btns.appendChild(r);
+    const a=document.createElement('button');a.className='btn btn-danger';a.textContent='🏳 J\'abandonne';
+    a.onclick=()=>{state.gameOver=true;render();showModal('info','Partie terminée','Voilà comment j\'aurais pu trouver la cible :',true,false);};
+    btns.appendChild(a);
+  } else {
+    const c=document.createElement('button');c.className='btn btn-new';c.textContent='🎲 Nouvelle partie';c.onclick=()=>{closeModal();openInputScreen();};btns.appendChild(c);
+  }
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+
+/* ══════════════════════════════
+   EVENTS + INIT
+══════════════════════════════ */
+document.getElementById('newGameBtn').onclick=newGame;
+document.getElementById('validateBtn').onclick=validateCalc;
+document.getElementById('cancelTryBtn').onclick=cancelTry;
+document.querySelectorAll('.op-btn').forEach(b=>b.onclick=()=>selectOp(b.dataset.op));
+document.querySelectorAll('.diff-btn').forEach(b=>b.onclick=()=>{
+  state.difficulty=b.dataset.diff;
+  document.querySelectorAll('.diff-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); newGame();
+});
+document.getElementById('startGameBtn').onclick=startGameFromInput;
+document.querySelectorAll('.input-num,.input-target').forEach(el=>{
+  el.addEventListener('keydown',e=>{ if(e.key==='Enter') startGameFromInput(); });
+});
+
+openInputScreen();
+</script>
+</body>
+</html>
