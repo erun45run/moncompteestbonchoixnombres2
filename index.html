@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le compte est bon - Mathador</title>
+<title>Le compte est bon</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -373,7 +373,7 @@ header {
 
 <!-- HEADER -->
 <header>
-  <div class="logo">🌟 Le compte est bon — <em>MATHADOR</em></div>
+  <div class="logo">🌟 Le compte est bon</div>
   <div class="header-right">
     <div class="diff-selector">
       <button class="diff-btn active" data-diff="facile">😊 Facile</button>
@@ -844,9 +844,9 @@ function validateCalc(){
     render();
     if(left===0){
       state.gameOver=true;
-      showModal('warn','😢 Nombres épuisés !','J\'ai utilisé tous mes tokens sans trouver la cible. Il ne me reste plus d\'essais. Voilà comment j\'aurais pu y arriver :',true,false);
+      showModal('warn','😢 Nombres épuisés !','J\'ai utilisé tous mes nombres sans trouver la cible. Il ne me reste plus d\'essais. Voilà comment j\'aurais pu y arriver :',true,false);
     } else {
-      showModal('warn','😮 J\'ai tout utilisé !',`J'ai utilisé tous mes tokens sans atteindre la cible.<br>Il me reste <strong>${left} essai(s)</strong>. Est-ce que je veux réessayer ?`,false,true);
+      showModal('warn','😮 J\'ai tout utilisé !',`J'ai utilisé tous mes nombres sans atteindre la cible.<br>Il me reste <strong>${left} essai(s)</strong>. Est-ce que je veux réessayer ?`,false,true);
     }
   }
 }
